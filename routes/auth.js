@@ -20,7 +20,7 @@ const router = express.Router();
 
 router.get("/verify", auth, verify_account);
 router.post("/login", validator(login_shcema), login)
-router.post("/regiser", validator(register_schema), register);
+router.post("/register", validator(register_schema), register);
 router.post("/reset-password", validator(reset_password_mail_schema), send_reset_password_mail);
 router.put("/reset-password", [ auth, validator(reset_password_schema) ], reset_password);
 

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const email = Joi.string().email({ minDomainSegments: 4, tlds: ['com', 'net', 'info', 'io']}).min(5).max(50).required();
+const email = Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'info', 'io']}}).min(5).max(50).required();
 const username = Joi.string().min(4).max(50).required();
 const password = Joi.string().min(8).regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]*$/).max(255).required();
 

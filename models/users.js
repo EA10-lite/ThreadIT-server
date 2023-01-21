@@ -8,7 +8,7 @@ const friend_schema = new mongoose.Schema({
 const user = new mongoose.Schema({
     created_at: { type: Date, default: Date.now },
     avatar: { type: String, default: '' },
-    bio: { type: String, default: '', minLength: 10, maxLength: 1024 },
+    bio: { type: String, default: '', maxLength: 1024 },
     cover_photo: { type: String, default: '' },
     date_of_birth: { type: Date, default: new Date('2000-01-01') },
     email: { type: String, minLength: 5, maxLength: 50, required: true, unique: true },
