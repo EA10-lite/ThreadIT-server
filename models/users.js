@@ -6,7 +6,7 @@ const friend_schema = new mongoose.Schema({
 })
 
 const user = new mongoose.Schema({
-    created_ad: { type: Date, default: Date.now },
+    created_at: { type: Date, default: Date.now },
     avatar: { type: String, default: '' },
     bio: { type: String, default: '', minLength: 10, maxLength: 1024 },
     cover_photo: { type: String, default: '' },
