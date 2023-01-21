@@ -1,44 +1,73 @@
-
-const { User } = require("../models/user");
+const { User } = require("../models/users");
 const { hash_password, verify_password } = require("../utils/hashing");
 const _ = require("lodash");
-const async_middleware = require("../middlewares/async");
 
-const login = async_middleware(async (req, res) => {
-    const user = await User.findOne({ username: req.body.username });
-    if(!user) return res.status(400).send({ error: "Incorrect email and password!" });
+const login = async (req, res) => {
+    const user = await User.findOne({ username: req.body.usernam });
+    if(!user) return res.status(404).send({ error: "Invalid username and password!" });
 
     const is_valid_password = await verify_password(req.body.password, user.password);
-    if(!is_valid_password) return res.status(400).send({ error: "Incorrect password!" });
+    if(!is_valid_password) return res.status(400).send({ error: "Incorrect password." });
 
     const token = user.generateAuthToken();
 
     res.status(200).send({
         token,
         error: null,
-        message: "login successful!"
+        message: "Login successful."
     });
-});
+}
 
-const register = async_middleware(async (req, res) => {
-    let user = await User.findOne().or([{ username: req.body.username }, { email: req.body.email }]);
-    if(user) return res.status(400).send({ error: "Username or email already in use!" });
+const register = async (req, res) => {
+    let user = await User.findOne().or([{ email: req.body.email },{ username: req.body.username }])
+    if(user) return res.status(400).send({ error: "username or email already exist!" });
 
     user = new User(req.body);
     user.password = await hash_password(user.password);
     await user.save();
 
-    const token = user.generateAuthToken();
-
-    res.header('x-auth-token', token).status(201).send({
-        data: {},
+    res.status(201).send({
+        data: _.pick(user, ['username', 'name']),
         error: null,
-        message: "Registration successful"
+        message: "Registration successful."
     });
-});
+}
 
+const reset_password = async (req, res) => {
+    const user = await User.findById(req.user._id);
+    if(!user) return res.status(404).send({ error: "User not found" });
+
+    user.password = await hash_password(req.body.password);
+    await user.save();
+
+    res.status(200).send({
+        error: null,
+        message: "Password updated successful."
+    });
+}
+
+const send_reset_password_mail = async (req, res) => {
+    const user = await User.findOne({ email: req.body.email });
+    if(!user) return res.status(404).send({ error: "user with email not found." });
+
+}
+
+const verify_account = async (req, res) => {
+    const user = await User.findOneAndUpdate({ email: req.user.email }, { $set: {
+        is_verified: true 
+    }}, { new: true });
+    if(!user) return res.status(404).send({ error: "user with email not found." });
+
+    res.status(200).send({
+        error: null,
+        message: "Account verification successful."
+    });
+}
 
 module.exports = {
     login,
-    register
+    register,
+    reset_password,
+    send_reset_password_mail,
+    verify_account,
 }

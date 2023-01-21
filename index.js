@@ -1,15 +1,16 @@
 require("express-async-errors");
 require("dotenv").config();
 const express = require("express");
-const error = require("./middlewares/error");
+
 const app = express();
+app.use(express.json());
 
-require("./structure/validation")();
+require("./structure/config")();
 require("./structure/db")();
-require("./structure/route")(app);
-app.use(error);
+require("./structure/validation")();
+require("./structure/routes")(app);
 
 
-app.listen(process.env.LOCAL_PORT, ()=> {
-    console.log("now listening at port", process.env.LOCAL_PORT);
+app.listen(process.env.PORT, ()=> {
+    console.log("listening at port", process.env.PORT);
 })
