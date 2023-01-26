@@ -10,7 +10,6 @@ const user = new mongoose.Schema({
     avatar: { type: String, default: '' },
     bio: { type: String, default: '', maxLength: 1024 },
     cover_photo: { type: String, default: '' },
-    date_of_birth: { type: Date, default: new Date('2000-01-01') },
     email: { type: String, minLength: 5, maxLength: 50, required: true, unique: true },
     friends: [friend_schema],
     location: { type: String, default: '' },

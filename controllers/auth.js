@@ -31,10 +31,12 @@ const register = async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ email: user.email }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1h'});
+    console.log(process.env.GMAIL_USERNAME);
+    console.log(process.env.GMAIL_PASSWORD);
     const mail_options = {
         from: process.env.GMAIL_USERNAME,
         to: user.email,
-        subject: 'Password Reset',
+        subject: 'Registration success!',
         html: `<p>Please click <a href="http://localhost:3000/account-verify/${token}">here</a> to verify your account.</p>`,
     };
 
