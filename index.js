@@ -6,6 +6,7 @@ const error = require("./middlewares/error");
 const app = express();
 app.use(express.json());
 
+require("./structure/cors")(app);
 require("./structure/config")();
 require("./structure/db")();
 require("./structure/validation")();

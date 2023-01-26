@@ -6,8 +6,9 @@ const jwt = require("jsonwebtoken");
 
 
 const login = async (req, res) => {
-    const user = await User.findOne({ username: req.body.usernam });
+    const user = await User.findOne({ username: req.body.username });
     if(!user) return res.status(404).send({ error: "Invalid username and password!" });
+    if(!user.is_verified) return res.status(401).send({ error: "You account is not verified" });
 
     const is_valid_password = await verify_password(req.body.password, user.password);
     if(!is_valid_password) return res.status(400).send({ error: "Incorrect password." });
