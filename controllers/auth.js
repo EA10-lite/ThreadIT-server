@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const login = async (req, res) => {
     const user = await User.findOne({ username: req.body.username });
     if(!user) return res.status(404).send({ error: "Invalid username and password!" });
-    if(!user.is_verified) return res.status(401).send({ error: "You account is not verified" });
+    if(!user.is_verified) return res.status(401).send({ error: "Please verify your account to continue." });
 
     const is_valid_password = await verify_password(req.body.password, user.password);
     if(!is_valid_password) return res.status(400).send({ error: "Incorrect password." });
@@ -31,8 +31,6 @@ const register = async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ email: user.email }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1h'});
-    console.log(process.env.GMAIL_USERNAME);
-    console.log(process.env.GMAIL_PASSWORD);
     const mail_options = {
         from: process.env.GMAIL_USERNAME,
         to: user.email,
